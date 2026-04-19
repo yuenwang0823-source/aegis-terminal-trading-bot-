@@ -39,7 +39,7 @@ export default function AegisUltimate() {
     alert(`${type} 執行成功！\n成交價格: ${price}\n成交數量: ${shares}`);
   };
 
-  if (loading && price === 0) {
+  if (loading && price === -1) {
     return (
       <div style={{ background: '#000', color: '#ff3333', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: 'monospace' }}>
         <div style={{ fontSize: '24px', marginBottom: '20px' }}>🛡️ AEGIS SYSTEM LOADING...</div>
