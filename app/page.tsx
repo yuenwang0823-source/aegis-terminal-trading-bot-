@@ -8,12 +8,14 @@ export default function AegisTerminal() {
   const [isRealTime, setIsRealTime] = useState(false);
 
   // ⚠️ 把你的金鑰貼在引號內，例如 "fugle-xxxxxx"
-  const FUGLE_API_KEY = "你的富果API金鑰貼這裡"; 
+  const FUGLE_API_KEY = "MjEzM2FiZTMtNTFiMy00ZGFiLWExNzUtZWE4YWYxNWEyZTYwIDZiNDU5MzVkLWM0YTUtNDk1NS04ZWVlLTUwMjUyYWUzMTU3MQ==
+"; 
 
   useEffect(() => {
     const fetchStockData = async () => {
       // 只有在填入有效金鑰時才執行抓取
-      if (FUGLE_API_KEY && FUGLE_API_KEY.length > 10 && !FUGLE_API_KEY.includes("貼這裡")) {
+      if (FUGLE_API_KEY && FUGLE_API_KEY.length > 10 && !FUGLE_API_KEY.includes("MjEzM2FiZTMtNTFiMy00ZGFiLWExNzUtZWE4YWYxNWEyZTYwIDZiNDU5MzVkLWM0YTUtNDk1NS04ZWVlLTUwMjUyYWUzMTU3MQ==
+")) {
         try {
           const res = await fetch(`https://api.fugle.tw/marketdata/v1.0/stock/snapshot/2330`, {
             method: 'GET',
