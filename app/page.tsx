@@ -8,7 +8,7 @@ export default function AegisUltimate() {
   const [logs, setLogs] = useState<string[]>(["[SYSTEM] AEGIS Real-time Link Initialized..."]);
 
   // ⚠️ 請在這裡輸入你在富果申請到的真實 API Key
-  const FUGLE_API_KEY = "你的富果API金鑰貼這裡"; 
+  const FUGLE_API_KEY = "MjEzM2FiZTMtNTFiMy00ZGFiLWExNzUtZWE4YWYxNWEyZTYwIDZiNDU5MzVkLWM0YTUtNDk1NS04ZWVlLTUwMjUyYWUzMTU3MQ=="; 
 
   useEffect(() => {
     const fetchStockData = async () => {
