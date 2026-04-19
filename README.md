@@ -1,1 +1,0 @@
-# aegis-terminal-trading-bot-
