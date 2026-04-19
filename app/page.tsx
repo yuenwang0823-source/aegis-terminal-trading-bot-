@@ -4,18 +4,16 @@ import React, { useState, useEffect } from 'react';
 export default function AegisTerminal() {
   const [price, setPrice] = useState<number>(2050.5); 
   const [shares, setShares] = useState(1000);
-  const [logs, setLogs] = useState<string[]>(["[SYSTEM] AEGIS Terminal v4.0 Active..."]);
+  const [logs, setLogs] = useState<string[]>(["[SYSTEM] AEGIS Terminal v4.1 Active..."]);
   const [isRealTime, setIsRealTime] = useState(false);
 
-  // ⚠️ 把你的金鑰貼在引號內，例如 "fugle-xxxxxx"
-  const FUGLE_API_KEY = "MjEzM2FiZTMtNTFiMy00ZGFiLWExNzUtZWE4YWYxNWEyZTYwIDZiNDU5MzVkLWM0YTUtNDk1NS04ZWVlLTUwMjUyYWUzMTU3MQ==
-"; 
+  // ⚠️ 金鑰已修正，去除了換行與錯誤判斷
+  const FUGLE_API_KEY = "MjEzM2FiZTMtNTFiMy00ZGFiLWExNzUtZWE4YWYxNWEyZTYwIDZiNDU5MzVkLWM0YTUtNDk1NS04ZWVlLTUwMjUyYWUzMTU3MQ=="; 
 
   useEffect(() => {
     const fetchStockData = async () => {
-      // 只有在填入有效金鑰時才執行抓取
-      if (FUGLE_API_KEY && FUGLE_API_KEY.length > 10 && !FUGLE_API_KEY.includes("MjEzM2FiZTMtNTFiMy00ZGFiLWExNzUtZWE4YWYxNWEyZTYwIDZiNDU5MzVkLWM0YTUtNDk1NS04ZWVlLTUwMjUyYWUzMTU3MQ==
-")) {
+      // 只要金鑰長度夠，就嘗試對接
+      if (FUGLE_API_KEY && FUGLE_API_KEY.length > 20) {
         try {
           const res = await fetch(`https://api.fugle.tw/marketdata/v1.0/stock/snapshot/2330`, {
             method: 'GET',
@@ -25,34 +23,39 @@ export default function AegisTerminal() {
             }
           });
           const data = await res.json();
+          
+          // 如果富果有回傳 lastPrice，就更新它
           if (data && data.lastPrice) {
             setPrice(data.lastPrice);
             setIsRealTime(true);
-            return;
+            return; 
+          } else {
+            console.warn("API 沒報錯，但沒拿到價格 (可能非開盤時間):", data);
           }
         } catch (err) {
-          console.error("Link Error");
+          console.error("網路連線失敗");
         }
       }
-      // 模擬跳動邏輯 (當沒接 API 時)
+      
+      // 沒抓到真數據時的模擬跳動
       setPrice(p => p + (Math.random() > 0.5 ? 0.2 : -0.2));
     };
 
     fetchStockData();
     const timer = setInterval(fetchStockData, isRealTime ? 10000 : 3000);
     return () => clearInterval(timer);
-  }, [isRealTime, FUGLE_API_KEY]);
+  }, [isRealTime]); // 移除 FUGLE_API_KEY 依賴以穩定編譯
 
   const handleTrade = (type: 'BUY' | 'SELL') => {
     const time = new Date().toLocaleTimeString();
     const msg = `[${time}] ${type} EXECUTED: ${shares} units @ ${price.toFixed(1)}`;
     setLogs(prev => [msg, ...prev].slice(0, 5));
-    alert(`⚡ AEGIS 指令已下達\n動作: ${type}\n價格: ${price.toFixed(1)}\n數量: ${shares}`);
+    alert(`⚡ AEGIS 指令確認\n動作: ${type}\n價格: ${price.toFixed(1)}\n數量: ${shares}`);
   };
 
   return (
     <div style={{ backgroundColor: '#000', color: '#ff3333', minHeight: '100vh', padding: '20px', fontFamily: 'monospace' }}>
-      <div style={{ borderBottom: '2px solid #ff3333', paddingBottom: '10px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ borderBottom: '2px solid #ff3333', paddingBottom: '10px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '24px' }}>🛡️ AEGIS TERMINAL</h1>
           <span style={{ fontSize: '12px', color: isRealTime ? '#00ff00' : '#ffaa00' }}>
@@ -79,7 +82,7 @@ export default function AegisTerminal() {
           type="range" min="1000" max="100000" step="1000" 
           value={shares} 
           onChange={(e) => setShares(Number(e.target.value))}
-          style={{ width: '100%', accentColor: '#ff3333', marginBottom: '40px' }} 
+          style={{ width: '100%', accentColor: '#ff3333', marginBottom: '40px', cursor: 'pointer' }} 
         />
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
@@ -97,3 +100,4 @@ export default function AegisTerminal() {
     </div>
   );
 }
+
